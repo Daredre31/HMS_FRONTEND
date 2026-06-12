@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
-import { getAllBedsAPI, createBedAPI } from "../services/api";
+import { getAllBedsAPI, createBedAPI, getRoomByIdAPI } from "../services/api";
 import api from "../services/api";
 
 // ── Types ─────────────────────────────────────────────────────
@@ -78,13 +78,13 @@ export default function RoomDetail() {
       try {
         // Fetch the room details and all beds, then filter beds for this room
         const [roomRes, bedsRes] = await Promise.all([
-          api.get(`/room/${roomId}`),
+          getRoomByIdAPI(`${roomId}`),
           getAllBedsAPI(),
         ]);
-        console.table(roomRes)
-        console.table(bedsRes)
-        setRoom(roomRes.data.data.room);
-        const allBeds: Bed[] = bedsRes.data.data.bed || [];
+        console.log(roomRes)
+        console.log(bedsRes)
+        setRoom(roomRes.data.data);
+        const allBeds: Bed[] = bedsRes.data.data || [];
         // Only show beds that belong to this room
         setBeds(allBeds.filter((b) => b.room?._id === roomId));
       } catch {
@@ -106,7 +106,7 @@ export default function RoomDetail() {
     try {
       const res = await createBedAPI({ bedNumber, room: roomId! });
       // Append the new bed directly — no need to refetch
-      setBeds((prev) => [...prev, res.data.bed]);
+      setBeds((prev) => [...prev, res.data.data]);
       setShowModal(false);
       setBedNumber("");
     } catch (err: any) {

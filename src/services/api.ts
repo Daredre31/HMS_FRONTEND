@@ -108,6 +108,7 @@ export const createRoomAPI = (data: {
   roomNumber: string;
   roomCapacity: number;
 }) => api.post("/room", data);
+export const getRoomByIdAPI = (id: string) => api.get(`/room/${id}`)
 
 
 // ── Beds ─────────────────────────────────────────────────────

@@ -2,7 +2,7 @@ import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { createStudentAPI, getAllBedsAPI } from "../services/api";
 
-// ── Types ─────────────────────────────────────────────────────
+//  Types
 
 interface Bed {
   _id: string;
@@ -78,7 +78,7 @@ export default function CreateStudent() {
     const load = async () => {
       try {
         const res = await getAllBedsAPI();
-        const allBeds: Bed[] = res.data.beds || [];
+        const allBeds: Bed[] = res.data.data || [];
         setBeds(allBeds.filter((b) => !b.isOccupied));
       } catch {
         setError("Could not load available beds.");
@@ -117,6 +117,7 @@ export default function CreateStudent() {
 
       // Show the generated token so admin can copy and give it to the student
       setGeneratedToken(res.data.access_token);
+      navigate('/admin/students')
     } catch (err: any) {
       setError(err.response?.data?.message || "Something went wrong. Try again.");
     } finally {

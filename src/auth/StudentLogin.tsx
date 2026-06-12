@@ -1,5 +1,6 @@
 import { useState, type FormEvent, type ChangeEvent, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { studentLoginAPI } from "../services/api";
 
 // What the student login API sends back
 interface StudentLoginResponse {
@@ -50,15 +51,11 @@ export default function StudentLogin() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/server/loginStudent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tokenId }),
-      });
+      const res = await studentLoginAPI({tokenId})
 
-      const data: StudentLoginResponse = await res.json();
+      const data: StudentLoginResponse = await res.data;
 
-      if (!res.ok) {
+      if (res.status == 400) {
         setError(data.message || "ID not recognised. Contact your admin.");
         return;
       }

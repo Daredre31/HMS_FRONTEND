@@ -42,9 +42,9 @@ export default function AdminLogin() {
     try {
       const res = await adminLoginAPI({email , password})
 
-      const data: LoginResponse = await res.data.data;
+      const data: LoginResponse = await res.data;
       console.log(data)
-      console.table(data)
+     
 
       if (res.status==400) {
         setError(data.message || "Login failed. Please try again.");
