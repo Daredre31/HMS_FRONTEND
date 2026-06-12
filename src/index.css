@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Primary ── */
+  --color-teal:           #0F6E56;
+  --color-teal-hover:     #085041;
+  --color-teal-light:     #E1F5EE;
+  --color-teal-mid:       #5DCAA5;
+  --color-teal-border:    #9FE1CB;
+
+  /* ── Sidebar & Dark surfaces ── */
+  --color-dark:           #2C2C2A;
+  --color-dark-mid:       #444441;
+  --color-dark-muted:     #5F5E5A;
+
+  /* ── Page backgrounds ── */
+  --color-bg-page:        #F1EFE8;
+  --color-bg-card:        #FFFFFF;
+  --color-bg-soft:        #D3D1C7;
+
+  /* ── Text ── */
+  --color-text-primary:   #2C2C2A;
+  --color-text-secondary: #888780;
+  --color-text-muted:     #B4B2A9;
+
+  /* ── Status — Paid ── */
+  --color-green:          #3B6D11;
+  --color-green-bg:       #EAF3DE;
+  --color-green-border:   #C0DD97;
+
+  /* ── Status — Pending ── */
+  --color-amber:          #854F0B;
+  --color-amber-bg:       #FAEEDA;
+  --color-amber-border:   #FAC775;
+
+  /* ── Status — Owing/Error ── */
+  --color-red:            #A32D2D;
+  --color-red-bg:         #FCEBEB;
+  --color-red-border:     #F7C1C1;
+
+  /* ── Info/Blue ── */
+  --color-blue:           #185FA5;
+  --color-blue-bg:        #E6F1FB;
+  --color-blue-border:    #B5D4F4;
+
+  /* ── Borders ── */
+  --color-border:         #D3D1C7;
+  --color-border-soft:    #E8E6DF;
+
+  /* ── Sidebar text ── */
+  --color-sidebar-text:   #B4B2A9;
+  --color-sidebar-muted:  #5F5E5A;
+}
