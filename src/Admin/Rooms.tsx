@@ -63,7 +63,7 @@ export default function Rooms() {
     const load = async () => {
       try {
         const res = await getAllRoomsAPI();
-        setRooms(res.data.rooms || []);
+        setRooms(res.data.data || []);
       } catch {
         setError("Could not load rooms. Try refreshing.");
       } finally {
@@ -91,7 +91,7 @@ export default function Rooms() {
         roomCapacity: Number(form.roomCapacity),
       });
       // Add the new room to the list without refetching everything
-      setRooms((prev) => [res.data.room, ...prev]);
+      setRooms((prev) => [res.data.data, ...prev]);
       setShowModal(false);
       setForm({ roomNumber: "", roomCapacity: "" });
     } catch (err: any) {

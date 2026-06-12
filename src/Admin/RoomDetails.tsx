@@ -81,8 +81,10 @@ export default function RoomDetail() {
           api.get(`/room/${roomId}`),
           getAllBedsAPI(),
         ]);
-        setRoom(roomRes.data.room);
-        const allBeds: Bed[] = bedsRes.data.beds || [];
+        console.table(roomRes)
+        console.table(bedsRes)
+        setRoom(roomRes.data.data.room);
+        const allBeds: Bed[] = bedsRes.data.data.bed || [];
         // Only show beds that belong to this room
         setBeds(allBeds.filter((b) => b.room?._id === roomId));
       } catch {

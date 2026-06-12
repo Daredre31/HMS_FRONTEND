@@ -11,7 +11,7 @@ import {
 import Sidebar from "../components/layout/Sidebar";
 import Topbar from "../components/layout/Topbar";
 import StatCard from "../components/layout/Statcard";
-import api from "../services/api";
+import api, { getAllStudentsAPI } from "../services/api";
   
 interface DashboardStats {
   totalStudents: number;
@@ -55,7 +55,8 @@ export default function Dashboard() {
     setStatsLoading(true);
     setStatsError(null);
     try {
-      const { data } = await api.get<DashboardStats>("/server/admin/dashboard/stats");
+      const { data } = await getAllStudentsAPI()
+      console.table(data)
       setStats(data);
     } catch {
       setStatsError("Couldn't load stats. Check your connection and try again.");

@@ -1,5 +1,6 @@
 import { useState, type FormEvent, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import api, { adminLoginAPI } from "../services/api";
 
 // Shape of what the login API sends back
 interface LoginResponse {
@@ -39,15 +40,13 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/server/loginAdmin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await adminLoginAPI({email , password})
 
-      const data: LoginResponse = await res.json();
+      const data: LoginResponse = await res.data.data;
+      console.log(data)
+      console.table(data)
 
-      if (!res.ok) {
+      if (res.status==400) {
         setError(data.message || "Login failed. Please try again.");
         return;
       }
@@ -229,9 +228,9 @@ export default function AdminLogin() {
 }
 
 
-// ── Inline SVG icons ─────────────────────────────────────────
+
 // Keeping them here avoids an extra icon library dependency for now.
-// Move to a shared /components/icons folder when the project grows.
+// i will  Move them to a shared /components/icons folder when the project grows.
 
 function HouseIcon() {
   return (
