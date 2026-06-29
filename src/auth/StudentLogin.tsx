@@ -12,6 +12,7 @@ interface StudentLoginResponse {
     name: string;
     email: string;
     tokenId: string;
+    role: string; // ← added
     currentSession: string;
     paymentStatus: string;
     expiryDate: string;
@@ -51,36 +52,32 @@ export default function StudentLogin() {
     setLoading(true);
 
     try {
-      const res = await studentLoginAPI({tokenId})
-
-      const data: StudentLoginResponse = await res.data;
-
-      console.log(data)
-
-      if (res.status == 404) {
-        setError(data.message || "ID not recognised. Contact your admin.");
-        return;
-      }
+      const res = await studentLoginAPI({ tokenId });
+      const data: StudentLoginResponse = res.data;
 
       // Save the JWT and student info for protected student routes
       localStorage.setItem("hms_student_token", data.token!);
       localStorage.setItem("hms_student", JSON.stringify(data.loginStudent));
 
-      navigate("/student/dashboard");
-    } catch(err:any) {
-      const remaining = err?.response?.headers?.['rateLimit-remaining']
-
-      console.log("all headers:", err?.response?.headers)
-    console.log("status:", err?.response?.status)
-
-      if( err?.response?.status == 429){
-        setError("too many attempt try again in 15 minutes")
-      } else if(remaining) {
-        setError(`invalid login ${remaining} attempt remains`)
+      // Role decides the destination — same ID, same login, different dashboard
+      if (data.loginStudent?.role === "hoh") {
+        navigate("/hoh/dashboard");
       } else {
-        setError("id not recognised contact your admin if error");
+        navigate("/student/dashboard");
       }
-      
+    } catch (err: any) {
+      const remaining = err?.response?.headers?.["rateLimit-remaining"];
+
+      console.log("all headers:", err?.response?.headers);
+      console.log("status:", err?.response?.status);
+
+      if (err?.response?.status === 429) {
+        setError("Too many attempts. Try again in 15 minutes.");
+      } else if (remaining) {
+        setError(`Invalid ID. ${remaining} attempt(s) remaining.`);
+      } else {
+        setError("ID not recognised. Contact your admin if this is an error.");
+      }
     } finally {
       setLoading(false);
     }
@@ -89,10 +86,8 @@ export default function StudentLogin() {
   return (
     <div className="min-h-screen flex font-sans bg-bg-page">
 
-     
       <div className="hidden lg:flex w-[45%] bg-dark flex-col justify-between p-12 relative overflow-hidden">
 
-        
         <span className="absolute -top-20 -right-20 w-80 h-80 rounded-full border border-teal/20 pointer-events-none" />
         <span className="absolute top-10 right-10 w-48 h-48 rounded-full border border-teal/10 pointer-events-none" />
         <span className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full border border-teal/15 pointer-events-none" />
@@ -139,7 +134,6 @@ export default function StudentLogin() {
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm">
 
-          {/* Heading — written for a student, not a system */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-text-primary tracking-tight mb-1">
               Enter your student ID
@@ -159,7 +153,6 @@ export default function StudentLogin() {
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
 
-            {/* Token input — the only field on this page */}
             <div>
               <label className="block text-sm font-medium text-text-primary mb-1.5">
                 Student ID
@@ -186,7 +179,6 @@ export default function StudentLogin() {
               </p>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
@@ -198,18 +190,10 @@ export default function StudentLogin() {
                 flex items-center justify-center gap-2
               "
             >
-              {loading ? (
-                <>
-                  <SpinnerIcon />
-                  Signing in...
-                </>
-              ) : (
-                "Access my portal"
-              )}
+              {loading ? <><SpinnerIcon /> Signing in...</> : "Access my portal"}
             </button>
           </form>
 
-          {/* Help text — tells the student what to do if they don't have an ID */}
           <div className="mt-8 p-4 bg-blue-bg border border-blue-border rounded-lg">
             <p className="text-xs text-blue font-medium mb-1">Don't have an ID?</p>
             <p className="text-xs text-text-secondary leading-relaxed">
@@ -217,7 +201,6 @@ export default function StudentLogin() {
             </p>
           </div>
 
-          {/* Student role badge */}
           <div className="mt-6 flex justify-center">
             <span className="inline-flex items-center gap-2 bg-teal-light px-4 py-1.5 rounded-full">
               <span className="w-1.5 h-1.5 rounded-full bg-teal" />
@@ -234,8 +217,6 @@ export default function StudentLogin() {
 
 
 // ── Inline SVG icons ──────────────────────────────────────────
-// Consistent with AdminLogin and AdminSignup.
-// i will move this to anothyer compnent as time goes on
 
 function HouseIcon() {
   return (

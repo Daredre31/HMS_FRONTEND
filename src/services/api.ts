@@ -45,13 +45,13 @@ const onRefreshed = (newToken: string) => {
 };
 
 function clearAuthAndRedirect() {
+  const isStudent = !!localStorage.getItem("hms_student_token");
   localStorage.removeItem("hms_token");
   localStorage.removeItem("hms_student_token");
   localStorage.removeItem("hms_user");
   localStorage.removeItem("hms_student");
-  window.location.href = "/admin/login";
+  window.location.href = isStudent ? "/student/login" : "/admin/login"; 
 }
-
 // Global response error handler.
 // 401 means the access token expired — try /refresh first (cookie goes automatically)
 // before treating it as a real logout.
@@ -121,16 +121,10 @@ export const studentLoginAPI = (data: {
 
 export const logout = () => api.post('/logout')
 
-// hoh is a student elevated to hoh role so he is going to login with
-//  student token but the token contain role = hoh not student
-// export const createHOHAPI = (data: {
-//   name: string;
-//   email: string;
-//   password: string;
-// }) => api.post("/signup/hoh", data);
 
 
-// ── Students ──
+
+// Students 
 export const getAllStudentsAPI = () => api.get("/getStudents");
 
 export const createStudentAPI = (data: {
@@ -150,7 +144,8 @@ export const updateStudentAPI = (id: string, data: Partial<{
   paymentStatus: string;
   currentSession: string;
   expiryDate: string;
-}>) => api.patch(`/student/${id}`, data);
+  role:string
+}>) => api.patch(`/updateStudent/${id}`, data);
 
 export const deleteStudentAPI = (id: string) => api.delete(`/deleteStudent/${id}`);
 
