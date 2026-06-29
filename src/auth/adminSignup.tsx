@@ -1,5 +1,6 @@
 import { useState, type FormEvent, type ChangeEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { adminSignupAPI } from "../services/api";
 
 // What the signup API sends back
 interface SignupResponse {
@@ -75,19 +76,12 @@ export default function AdminSignup() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/server/createAdmin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          password: form.password,
-        }),
-      });
+      const res = await adminSignupAPI({
+        name:form.name , email:form.email, password:form.password
+      })
+      const data: SignupResponse = await res.data;
 
-      const data: SignupResponse = await res.json();
-
-      if (!res.ok) {
+      if (res.data === 400) {
         setError(data.message || "Signup failed. Please try again.");
         return;
       }
