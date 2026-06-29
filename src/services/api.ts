@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Point this at your Render deployment URL once you've hosted the backend.
 // For local development, it falls back to localhost automatically.
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/server";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 // Single axios instance shared across the whole app.
 // Everything — auth headers, base URL, timeouts — is configured here
