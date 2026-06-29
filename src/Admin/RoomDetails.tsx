@@ -138,6 +138,9 @@ export default function RoomDetail() {
 
   const occupiedCount = beds.filter((b) => b.isOccupied).length;
   const availableCount = beds.filter((b) => !b.isOccupied).length;
+  
+
+    
 
   return (
     <div className="flex h-screen bg-bg-page font-sans overflow-hidden">
@@ -146,7 +149,7 @@ export default function RoomDetail() {
         <div className="fixed inset-0 bg-black/50 z-20 md:hidden" onClick={() => setMobileOpen(false)} />
       )}
 
-      {/* ── Sidebar ── */}
+      {/*  Sidebar  */}
       <aside className={`
         fixed md:relative z-30 flex flex-col bg-dark min-h-screen
         transition-all duration-300 ease-in-out flex-shrink-0
@@ -200,7 +203,7 @@ export default function RoomDetail() {
         </div>
       </aside>
 
-      {/* ── Main area ── */}
+      {/* Main area  */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         <header className="h-16 bg-bg-card border-b border-border flex items-center justify-between px-4 md:px-6 flex-shrink-0">

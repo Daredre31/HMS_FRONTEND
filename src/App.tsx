@@ -9,6 +9,8 @@ import CreateStudent from './Admin/createstudent'
 import Rooms from './Admin/Rooms'
 import RoomDetail from './Admin/RoomDetails'
 import StudentDashboard from './Student/Dashboard'
+import StudentComplaints from './Student/Complaints'
+import AdminComplaints from './Admin/Complaint'
 
 const App = () => {
   return (
@@ -22,7 +24,9 @@ const App = () => {
         <Route path='/admin/students/new' element={<CreateStudent />} />
         <Route path='/admin/rooms' element={<Rooms />} /> 
         <Route path='/admin/rooms/:roomId' element={<RoomDetail />} />
+        <Route path="/admin/complaints" element={<AdminComplaints />} />
         <Route path='/student/dashboard' element={<StudentDashboard />} />
+        <Route path="/student/complaints" element={<StudentComplaints />} />
       </Routes>
     </div>
   )

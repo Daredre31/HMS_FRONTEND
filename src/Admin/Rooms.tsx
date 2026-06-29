@@ -120,7 +120,7 @@ export default function Rooms() {
         <div className="fixed inset-0 bg-black/50 z-20 md:hidden" onClick={() => setMobileOpen(false)} />
       )}
 
-      {/* ── Sidebar ── */}
+      {/* Sidebar  */}
       <aside className={`
         fixed md:relative z-30 flex flex-col bg-dark min-h-screen
         transition-all duration-300 ease-in-out flex-shrink-0

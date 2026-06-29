@@ -11,7 +11,7 @@ import {
 import Sidebar from "../components/layout/Sidebar";
 import Topbar from "../components/layout/Topbar";
 import StatCard from "../components/layout/Statcard";
-import api, { getAllStudentsAPI } from "../services/api";
+import api, { dashboardStats} from "../services/api";
   
 interface DashboardStats {
   totalStudents: number;
@@ -39,13 +39,13 @@ const activityDot: Record<RecentActivity["type"], string> = {
 };
 
 export default function Dashboard() {
-  const [stats, setStats]               = useState<DashboardStats | null>(null);
-  const [activity, setActivity]         = useState<RecentActivity[]>([]);
+  const [stats, setStats]  = useState<DashboardStats | null>(null);
+  const [activity, setActivity] = useState<RecentActivity[]>([]);
   const [statsLoading, setStatsLoading] = useState(true);
-  const [actLoading, setActLoading]     = useState(true);
-  const [statsError, setStatsError]     = useState<string | null>(null);
+  const [actLoading, setActLoading]  = useState(true);
+  const [statsError, setStatsError] = useState<string | null>(null);
 
-  const [sidebarOpen, setSidebarOpen]           = useState(false);
+  const [sidebarOpen, setSidebarOpen]  = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const adminName =
@@ -55,9 +55,9 @@ export default function Dashboard() {
     setStatsLoading(true);
     setStatsError(null);
     try {
-      const { data } = await getAllStudentsAPI()
-      console.table(data)
-      setStats(data);
+      const { data } = await dashboardStats();
+         console.log(data)
+      setStats(data.data);
     } catch {
       setStatsError("Couldn't load stats. Check your connection and try again.");
     } finally {

@@ -12,6 +12,7 @@ import {
   LogOut,
   X,
 } from "lucide-react";
+import api, { logout } from "../../services/api";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -33,8 +34,9 @@ const navItems = [
 
 export default function Sidebar({ isOpen, isCollapsed, onClose }: SidebarProps) {
   const handleLogout = () => {
+    logout()
     localStorage.removeItem("token");
-    window.location.href = "/admin/login";
+    window.location.href = "/admin/login"; 
   };
 
   // inline style is the only reliable way to drive width transitions in Tailwind v4

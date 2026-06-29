@@ -55,7 +55,9 @@ export default function StudentLogin() {
 
       const data: StudentLoginResponse = await res.data;
 
-      if (res.status == 400) {
+      console.log(data)
+
+      if (res.status == 404) {
         setError(data.message || "ID not recognised. Contact your admin.");
         return;
       }
@@ -65,8 +67,20 @@ export default function StudentLogin() {
       localStorage.setItem("hms_student", JSON.stringify(data.loginStudent));
 
       navigate("/student/dashboard");
-    } catch {
-      setError("Could not reach the server. Try again shortly.");
+    } catch(err:any) {
+      const remaining = err?.response?.headers?.['rateLimit-remaining']
+
+      console.log("all headers:", err?.response?.headers)
+    console.log("status:", err?.response?.status)
+
+      if( err?.response?.status == 429){
+        setError("too many attempt try again in 15 minutes")
+      } else if(remaining) {
+        setError(`invalid login ${remaining} attempt remains`)
+      } else {
+        setError("id not recognised contact your admin if error");
+      }
+      
     } finally {
       setLoading(false);
     }
@@ -75,10 +89,10 @@ export default function StudentLogin() {
   return (
     <div className="min-h-screen flex font-sans bg-bg-page">
 
-      {/* ── Left panel: branding ── */}
+     
       <div className="hidden lg:flex w-[45%] bg-dark flex-col justify-between p-12 relative overflow-hidden">
 
-        {/* Decorative rings — consistent visual language across all auth pages */}
+        
         <span className="absolute -top-20 -right-20 w-80 h-80 rounded-full border border-teal/20 pointer-events-none" />
         <span className="absolute top-10 right-10 w-48 h-48 rounded-full border border-teal/10 pointer-events-none" />
         <span className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full border border-teal/15 pointer-events-none" />
@@ -121,7 +135,7 @@ export default function StudentLogin() {
         </div>
       </div>
 
-      {/* ── Right panel: the login form ── */}
+      {/* Right panel: the login form */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm">
 
@@ -221,7 +235,7 @@ export default function StudentLogin() {
 
 // ── Inline SVG icons ──────────────────────────────────────────
 // Consistent with AdminLogin and AdminSignup.
-// Move to /components/icons/index.tsx when the project grows.
+// i will move this to anothyer compnent as time goes on
 
 function HouseIcon() {
   return (

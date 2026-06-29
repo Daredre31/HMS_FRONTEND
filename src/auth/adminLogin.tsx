@@ -72,7 +72,7 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen flex font-sans bg-bg-page">
 
-      {/* ── Left panel: branding and context ── */}
+      {/*  Left panel: branding and context */}
       <div className="hidden lg:flex w-[45%] bg-dark flex-col justify-between p-12 relative overflow-hidden">
 
         {/* Decorative ring accents — purely visual, no meaning */}

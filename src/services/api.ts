@@ -13,6 +13,7 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
   timeout: 10000,
+  withCredentials: true, // lets the browser send/receive the httpOnly refreshToken cookie
 });
 
 // Attach the JWT to every outgoing request automatically.
@@ -32,25 +33,76 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// ── Refresh handling ──
+// If multiple requests fail at once (e.g. a page loads several API calls together),
+// only one of them should trigger /refresh — the rest just wait for that one to finish.
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+const onRefreshed = (newToken: string) => {
+  refreshSubscribers.forEach((cb) => cb(newToken));
+  refreshSubscribers = [];
+};
+
+function clearAuthAndRedirect() {
+  localStorage.removeItem("hms_token");
+  localStorage.removeItem("hms_student_token");
+  localStorage.removeItem("hms_user");
+  localStorage.removeItem("hms_student");
+  window.location.href = "/admin/login";
+}
+
 // Global response error handler.
-// 401 means the token expired or was tampered with — log the user out.
-// Everything else gets passed back to the calling component to handle.
+// 401 means the access token expired — try /refresh first (cookie goes automatically)
+// before treating it as a real logout.
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("hms_token");
-      localStorage.removeItem("hms_student_token");
-      localStorage.removeItem("hms_user");
-      localStorage.removeItem("hms_student");
-      window.location.href = "/login";
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      if (isRefreshing) {
+        return new Promise((resolve) => {
+          refreshSubscribers.push((newToken: string) => {
+            originalRequest.headers.Authorization = `Bearer ${newToken}`;
+            resolve(api(originalRequest));
+          });
+        });
+      }
+
+      isRefreshing = true;
+
+      try {
+        const res = await axios.post(
+          `${BASE_URL}/refresh`,
+          {},
+          { withCredentials: true }
+        );
+        const { accessToken } = res.data.data;
+
+        const isStudent = !!localStorage.getItem("hms_student_token");
+        localStorage.setItem(isStudent ? "hms_student_token" : "hms_token", accessToken);
+
+        isRefreshing = false;
+        onRefreshed(accessToken);
+
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        return api(originalRequest);
+      } catch (refreshErr) {
+        isRefreshing = false;
+        clearAuthAndRedirect();
+        return Promise.reject(refreshErr);
+      }
     }
+
     return Promise.reject(error);
   }
 );
 
 
-// ── Auth ─────────────────────────────────────────────────────
+// ── Auth 
 
 export const adminSignupAPI = (data: {
   name: string;
@@ -67,15 +119,18 @@ export const studentLoginAPI = (data: {
   tokenId: string;
 }) => api.post("/loginStudent", data);
 
-export const createHOHAPI = (data: {
-  name: string;
-  email: string;
-  password: string;
-}) => api.post("/signup/hoh", data);
+export const logout = () => api.post('/logout')
+
+// hoh is a student elevated to hoh role so he is going to login with
+//  student token but the token contain role = hoh not student
+// export const createHOHAPI = (data: {
+//   name: string;
+//   email: string;
+//   password: string;
+// }) => api.post("/signup/hoh", data);
 
 
-// ── Students ─────────────────────────────────────────────────
-
+// ── Students ──
 export const getAllStudentsAPI = () => api.get("/getStudents");
 
 export const createStudentAPI = (data: {
@@ -97,11 +152,13 @@ export const updateStudentAPI = (id: string, data: Partial<{
   expiryDate: string;
 }>) => api.patch(`/student/${id}`, data);
 
-export const deleteStudentAPI = (id: string) => api.delete(`/student/${id}`);
+export const deleteStudentAPI = (id: string) => api.delete(`/deleteStudent/${id}`);
 
+// dashboardStats 
 
-// ── Rooms ─────────────────────────────────────────────────────
+export const dashboardStats = () => api.get("/dashboardstats")
 
+//  Rooms 
 export const getAllRoomsAPI = () => api.get("/allroom");
 
 export const createRoomAPI = (data: {
@@ -111,7 +168,7 @@ export const createRoomAPI = (data: {
 export const getRoomByIdAPI = (id: string) => api.get(`/room/${id}`)
 
 
-// ── Beds ─────────────────────────────────────────────────────
+// Beds 
 
 export const getAllBedsAPI = () => api.get("/allbed");
 
@@ -121,8 +178,8 @@ export const createBedAPI = (data: {
 }) => api.post("/bed", data);
 
 
-// ── Payments ─────────────────────────────────────────────────
 
+// ── Payments ──
 // These will be wired up once the payment backend is ready
 export const getPaymentsAPI = () => api.get("/payments");
 
@@ -133,18 +190,18 @@ export const recordManualPaymentAPI = (data: {
 }) => api.post("/payments/manual", data);
 
 
-// ── Complaints ───────────────────────────────────────────────
-
-export const getComplaintsAPI = () => api.get("/complaints");
+//  Complaints 
+export const getComplaintsAPI = () => api.get("/viewallcomplains");
+export const getMyComplaintsAPI = () => api.get("/viewmycomplain");
 
 export const createComplaintAPI = (data: {
   title: string;
   description: string;
-}) => api.post("/complaints", data);
+}) => api.post("/createcomplain", data);
 
+export const respondToComplaintAPI = (id: string, data: any) => api.put(`/replycomplain/${id}`, data)
 
-// ── Tasks ────────────────────────────────────────────────────
-
+//Tasks 
 export const getTasksAPI = () => api.get("/tasks");
 
 export const createTaskAPI = (data: {
@@ -155,7 +212,7 @@ export const createTaskAPI = (data: {
 }) => api.post("/tasks", data);
 
 
-// ── Notifications ────────────────────────────────────────────
+//  Notifications 
 
 export const getNotificationsAPI = () => api.get("/notifications");
 

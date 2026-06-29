@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { getAllStudentsAPI, deleteStudentAPI } from "../services/api";
+import { getAllStudentsAPI, deleteStudentAPI, logout } from "../services/api";
 
 // ── Types ─────────────────────────────────────────────────────
 
@@ -116,6 +116,7 @@ export default function Students() {
   };
 
   const handleLogout = () => {
+    logout()
     localStorage.removeItem("hms_token");
     localStorage.removeItem("hms_user");
     navigate("/login");
