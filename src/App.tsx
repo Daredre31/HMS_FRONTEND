@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes ,Navigate  } from 'react-router-dom'
 import AdminLogin from './auth/adminLogin'
 import AdminSignup from './auth/adminSignup'
 import StudentLogin from './auth/StudentLogin'
@@ -19,6 +19,9 @@ const App = () => {
     <div>
       <Routes>
 
+      {/* redirect route which is very important */}
+
+      <Route path='/' element={<Navigate to='/student/login' replace />} />
         {/* all route that concern admin */}
         <Route path='/admin/signup' element={<AdminSignup />} />
         <Route path='/admin/login' element={<AdminLogin />} />
@@ -38,6 +41,10 @@ const App = () => {
           {/* all route that contains hoh */}
 
           <Route path="/hoh/dashboard" element={<HOHDashboard />} />
+
+          {/* mr catcher baami */}
+
+           <Route path='*' element={<Navigate to='/student/login' replace />} />
       </Routes>
     </div>
   )
