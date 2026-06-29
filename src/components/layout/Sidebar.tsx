@@ -12,7 +12,7 @@ import {
   LogOut,
   X,
 } from "lucide-react";
-import api, { logout } from "../../services/api";
+import  { logout } from "../../services/api";
 
 interface SidebarProps {
   isOpen: boolean;

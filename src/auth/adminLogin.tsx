@@ -1,6 +1,6 @@
 import { useState, type FormEvent, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import api, { adminLoginAPI } from "../services/api";
+import { adminLoginAPI } from "../services/api";
 
 // Shape of what the login API sends back
 interface LoginResponse {
