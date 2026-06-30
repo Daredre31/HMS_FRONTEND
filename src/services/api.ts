@@ -82,6 +82,9 @@ api.interceptors.response.use(
         );
         const { accessToken } = res.data.data;
 
+        console.log("refresh", res)
+        console.log("access", accessToken)
+
         const isStudent = !!localStorage.getItem("hms_student_token");
         localStorage.setItem(isStudent ? "hms_student_token" : "hms_token", accessToken);
 
@@ -120,7 +123,6 @@ export const studentLoginAPI = (data: {
 }) => api.post("/loginStudent", data);
 
 export const logout = () => api.post('/logout')
-
 
 
 
