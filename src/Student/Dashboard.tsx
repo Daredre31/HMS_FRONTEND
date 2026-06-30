@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { logout } from "../services/api";
 
 // types
 
@@ -56,11 +57,17 @@ export default function StudentDashboard() {
     setMobileOpen(false);
   }, [location.pathname]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+  try {
+    await logout();
+  } finally {
+    localStorage.removeItem("hms_token");
     localStorage.removeItem("hms_student_token");
+    localStorage.removeItem("hms_user");
     localStorage.removeItem("hms_student");
-    navigate("/student/login");
-  };
+    navigate("/student/login")
+  }
+};
 
   // How many days until the token expires
   const daysUntilExpiry = student

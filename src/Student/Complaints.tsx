@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { getMyComplaintsAPI, createComplaintAPI } from "../services/api";
+import { getMyComplaintsAPI, createComplaintAPI, logout } from "../services/api";
 
 // ── Types
 
@@ -110,12 +110,19 @@ export default function StudentComplaints() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("hms_student_token");
-    localStorage.removeItem("hms_student");
-    navigate("/student/login");
-  };
+  
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      localStorage.removeItem("hms_token");
+      localStorage.removeItem("hms_student_token");
+      localStorage.removeItem("hms_user");
+      localStorage.removeItem("hms_student");
+      navigate("/student/login")
+    }
+  };
   return (
     <div className="flex h-screen bg-bg-page font-sans overflow-hidden">
 

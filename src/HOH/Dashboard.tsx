@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { createTaskAPI, getTasksAPI, getAllStudentsAPI } from "../services/api";
+import { createTaskAPI, getTasksAPI, getAllStudentsAPI, logout } from "../services/api";
 
 //  Types 
 
@@ -107,11 +107,18 @@ export default function HOHDashboard() {
       .finally(() => setTasksLoading(false));
   }, []);
 
-  const handleLogout = () => {
+  
+  const handleLogout = async () => {
+  try {
+    await logout();
+  } finally {
+    localStorage.removeItem("hms_token");
     localStorage.removeItem("hms_student_token");
+    localStorage.removeItem("hms_user");
     localStorage.removeItem("hms_student");
-    navigate("/student/login");
-  };
+    navigate("/student/login")
+  }
+};
 
   // Task form 
   const handleTaskChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {

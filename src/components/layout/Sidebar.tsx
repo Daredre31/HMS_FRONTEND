@@ -33,11 +33,17 @@ const navItems = [
 ];
 
 export default function Sidebar({ isOpen, isCollapsed, onClose }: SidebarProps) {
-  const handleLogout = () => {
-    logout()
-    localStorage.removeItem("token");
-    window.location.href = "/admin/login"; 
-  };
+  const handleLogout = async () => {
+  try {
+    await logout();
+  } finally {
+    localStorage.removeItem("hms_token");
+    localStorage.removeItem("hms_student_token");
+    localStorage.removeItem("hms_user");
+    localStorage.removeItem("hms_student");
+    window.location.href = "/admin/login";
+  }
+};
 
   // inline style is the only reliable way to drive width transitions in Tailwind v4
   // dynamic class strings like `lg:w-${x}` don't get picked up by the compiler
