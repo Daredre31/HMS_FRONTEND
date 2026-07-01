@@ -13,6 +13,7 @@ import StudentComplaints from './Student/Complaints'
 import AdminComplaints from './Admin/Complaint'
 import EditStudent from './Admin/EditStudent'
 import HOHDashboard from './HOH/Dashboard'
+import StudentTasks from './Student/StudentTask'
 
 const App = () => {
   return (
@@ -37,12 +38,13 @@ const App = () => {
         <Route path='/student/dashboard' element={<StudentDashboard />} />
         <Route path="/student/complaints" element={<StudentComplaints />} />
         <Route path='/student/login' element={<StudentLogin />} />
+        <Route path='/student/task' element={<StudentTasks />} />
 
           {/* all route that contains hoh */}
 
           <Route path="/hoh/dashboard" element={<HOHDashboard />} />
 
-          {/* mr catcher baami */}
+          {/* mr catcher baami this guys ia a bastard i will soon remove it*/}
 
            <Route path='*' element={<Navigate to='/student/login' replace />} />
       </Routes>

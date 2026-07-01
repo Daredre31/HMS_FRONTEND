@@ -208,6 +208,9 @@ export const createTaskAPI = (data: {
   dueDate: string;
 }) => api.post("/tasks", data);
 
+export const getMyTasksAPI = () => api.get('/mytask');
+export const completeTaskAPI =(id:string) =>  api.patch(`/completetask/${id}`)
+
 
 //  Notifications 
 
