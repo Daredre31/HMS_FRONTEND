@@ -204,7 +204,7 @@ export const getAllTasksAPI = () => api.get("/alltasks");
 export const createTaskAPI = (data: {
   title: string;
   description: string;
-  assignedTo: string;
+  assignTo: string;
   dueDate: string;
 }) => api.post("/assigntask", data);
 

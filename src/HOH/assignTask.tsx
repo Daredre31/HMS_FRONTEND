@@ -61,7 +61,7 @@ export default function HOHTasks() {
   const [taskForm, setTaskForm] = useState({
     title: "",
     description: "",
-    assignedTo: "",
+    assignTo: "",
     dueDate: "",
   });
   const [taskLoading, setTaskLoading] = useState<boolean>(false);
@@ -124,7 +124,7 @@ export default function HOHTasks() {
 
   const handleTaskSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!taskForm.title || !taskForm.description || !taskForm.assignedTo || !taskForm.dueDate) {
+    if (!taskForm.title || !taskForm.description || !taskForm.assignTo || !taskForm.dueDate) {
       setTaskError("All fields are required.");
       return;
     }
@@ -136,7 +136,7 @@ export default function HOHTasks() {
       const newTasks = Array.isArray(created) ? created : [created];
       setTasks((p) => [...newTasks, ...p]);
       setTaskSuccess(true);
-      setTaskForm({ title: "", description: "", assignedTo: "", dueDate: "" });
+      setTaskForm({ title: "", description: "", assignTo: "", dueDate: "" });
       setTimeout(() => {
         setTaskSuccess(false);
         setShowTaskModal(false);
@@ -419,7 +419,7 @@ export default function HOHTasks() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-text-primary mb-1.5">Assign to</label>
-                  <select name="assignedTo" value={taskForm.assignedTo} onChange={handleTaskChange}
+                  <select name="assignedTo" value={taskForm.assignTo} onChange={handleTaskChange}
                     className="w-full px-3 py-2.5 rounded-lg text-sm bg-bg-page border border-border text-text-primary focus:outline-none focus:border-teal transition-colors">
                     <option value="">Select student</option>
                     {students.map((s) => (
