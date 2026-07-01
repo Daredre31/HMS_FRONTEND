@@ -83,7 +83,7 @@ export default function Sidebar({ isOpen, isCollapsed, onClose }: SidebarProps) 
               isCollapsed ? "opacity-0 pointer-events-none w-0 overflow-hidden" : "opacity-100",
             ].join(" ")}
           >
-            HostelOS
+           APPCLICk_HostelOS
           </span>
 
           {/* X button — mobile only */}

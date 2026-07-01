@@ -87,7 +87,7 @@ export default function AdminLogin() {
               <HouseIcon />
             </div>
             <span className="text-teal-light text-lg font-semibold tracking-tight">
-              HostelOS
+              APPLICK_HostelOS
             </span>
           </div>
 

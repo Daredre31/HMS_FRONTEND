@@ -114,7 +114,7 @@ export default function AdminSignup() {
               <HouseIcon />
             </div>
             <span className="text-teal-light text-lg font-semibold tracking-tight">
-              HostelOS
+              APPCLICk_HostelOS
             </span>
           </div>
 

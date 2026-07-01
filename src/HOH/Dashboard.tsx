@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { createTaskAPI, getTasksAPI, getAllStudentsAPI, logout } from "../services/api";
+import { createTaskAPI, getAllTasksAPI, getAllStudentsAPI, logout } from "../services/api";
 
 //  Types 
 
@@ -101,7 +101,7 @@ export default function HOHDashboard() {
 
   // Load tasks created by HOH
   useEffect(() => {
-    getTasksAPI()
+    getAllTasksAPI()
       .then((res) => setTasks(res.data.data || []))
       .catch(() => {})
       .finally(() => setTasksLoading(false));
@@ -207,7 +207,7 @@ export default function HOHDashboard() {
               <div className="w-7 h-7 bg-teal rounded-lg flex items-center justify-center flex-shrink-0">
                 <HouseIconSm />
               </div>
-              <span className="text-teal-light text-sm font-semibold tracking-tight">HostelOS</span>
+              <span className="text-teal-light text-sm font-semibold tracking-tight">APPCLICk_HostelOS</span>
             </div>
           )}
           <button onClick={() => setCollapsed((p) => !p)} className="hidden md:flex text-sidebar-muted hover:text-teal transition-colors p-1 rounded">

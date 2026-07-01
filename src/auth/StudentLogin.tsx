@@ -99,7 +99,7 @@ export default function StudentLogin() {
               <HouseIcon />
             </div>
             <span className="text-teal-light text-lg font-semibold tracking-tight">
-              HostelOS
+             APPCLICk_HostelOS
             </span>
           </div>
 

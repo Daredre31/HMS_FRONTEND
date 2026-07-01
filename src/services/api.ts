@@ -199,14 +199,14 @@ export const createComplaintAPI = (data: {
 export const respondToComplaintAPI = (id: string, data: any) => api.put(`/replycomplain/${id}`, data)
 
 //Tasks 
-export const getTasksAPI = () => api.get("/tasks");
+export const getAllTasksAPI = () => api.get("/alltasks");
 
 export const createTaskAPI = (data: {
   title: string;
   description: string;
   assignedTo: string;
   dueDate: string;
-}) => api.post("/tasks", data);
+}) => api.post("/asigntask", data);
 
 export const getMyTasksAPI = () => api.get('/mytask');
 export const completeTaskAPI =(id:string) =>  api.patch(`/completetask/${id}`)

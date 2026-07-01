@@ -14,6 +14,7 @@ import AdminComplaints from './Admin/Complaint'
 import EditStudent from './Admin/EditStudent'
 import HOHDashboard from './HOH/Dashboard'
 import StudentTasks from './Student/StudentTask'
+import HOHTasks from './HOH/assignTask'
 
 const App = () => {
   return (
@@ -43,10 +44,12 @@ const App = () => {
           {/* all route that contains hoh */}
 
           <Route path="/hoh/dashboard" element={<HOHDashboard />} />
+          <Route path='/hoh/create-task' element={<HOHTasks />} />
 
           {/* mr catcher baami this guys ia a bastard i will soon remove it*/}
 
-           <Route path='*' element={<Navigate to='/student/login' replace />} />
+           {/* <Route path='*' element={<Navigate to='/student/login' replace />} /> */}
+
       </Routes>
     </div>
   )

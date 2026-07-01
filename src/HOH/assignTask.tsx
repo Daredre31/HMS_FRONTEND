@@ -1,43 +1,48 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { getMyTasksAPI, completeTaskAPI, logout } from "../services/api";
+import { createTaskAPI, getAllTasksAPI, getAllStudentsAPI, logout } from "../services/api";
+
 //  Types 
 
 interface StudentData {
   _id: string;
   name: string;
   email: string;
-  bed: {
-    bedNumber: string;
-    room: { roomNumber: string | number };
-  };
+}
+
+interface PopulatedRef {
+  _id: string;
+  name: string;
 }
 
 interface Task {
   _id: string;
   title: string;
   description: string;
+  assignTo: PopulatedRef | string;
+  completedBy?: PopulatedRef | string | null;
   dueDate: string;
   isComplete: boolean;
   createdAt: string;
 }
 
-type FilterTab = "pending" | "completed";
+type FilterTab = "all" | "pending" | "completed";
 
-//  Student sidebar nav 
+//  HOH sidebar nav 
 
 const NAV_ITEMS = [
-  { label: "Dashboard",    path: "/student/dashboard",  icon: <GridIcon /> },
-  { label: "My Room",      path: "/student/room",       icon: <DoorIcon /> },
-  { label: "Payment",      path: "/student/payment",    icon: <ReceiptIcon /> },
-  { label: "Tasks",        path: "/student/tasks",      icon: <TaskIcon /> },
-  { label: "Complaints",   path: "/student/complaints", icon: <ChatIcon /> },
-  { label: "Handbook",     path: "/student/handbook",   icon: <BookIcon /> },
+  { label: "Dashboard",     path: "/hoh/dashboard",      icon: <GridIcon /> },
+  { label: "My Room",       path: "/student/room",       icon: <DoorIcon /> },
+  { label: "Payment",       path: "/student/payment",    icon: <ReceiptIcon /> },
+  { label: "Tasks",         path: "/hoh/tasks",          icon: <TaskIcon /> },
+  { label: "Announcement",  path: "/hoh/announcement",   icon: <MegaphoneIcon /> },
+  { label: "Complaints",    path: "/student/complaints", icon: <ChatIcon /> },
+  { label: "Handbook",      path: "/student/handbook",   icon: <BookIcon /> },
 ];
 
-//  Student Tasks Page 
+//  HOH Tasks Page 
 
-export default function StudentTasks() {
+export default function HOHTasks() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -46,30 +51,48 @@ export default function StudentTasks() {
   const [student, setStudent] = useState<StudentData | null>(null);
 
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [students, setStudents] = useState<StudentData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const [tab, setTab] = useState<FilterTab>("pending");
-  const [completingId, setCompletingId] = useState<string | null>(null);
+  const [tab, setTab] = useState<FilterTab>("all");
 
-  // Load student from localStorage
+  // Assign task modal
+  const [showTaskModal, setShowTaskModal] = useState<boolean>(false);
+  const [taskForm, setTaskForm] = useState({
+    title: "",
+    description: "",
+    assignedTo: "",
+    dueDate: "",
+  });
+  const [taskLoading, setTaskLoading] = useState<boolean>(false);
+  const [taskError, setTaskError] = useState<string>("");
+  const [taskSuccess, setTaskSuccess] = useState<boolean>(false);
+
   useEffect(() => {
     const stored = localStorage.getItem("hms_student");
     if (!stored) { navigate("/student/login"); return; }
-    setStudent(JSON.parse(stored));
+    const parsed = JSON.parse(stored);
+    if (parsed.role !== "hoh") { navigate("/student/dashboard"); return; }
+    setStudent(parsed);
   }, [navigate]);
 
   useEffect(() => { setMobileOpen(false); }, [location.pathname]);
 
-  // Load tasks
+  useEffect(() => {
+    getAllStudentsAPI()
+      .then((res) => setStudents(res.data.data || []))
+      .catch(() => {});
+  }, []);
+
   const loadTasks = async () => {
     setLoading(true);
     setError("");
     try {
-      const res = await getMyTasksAPI();
+      const res = await getAllTasksAPI();
       setTasks(res.data.data || []);
     } catch (err: any) {
-      // Backend returns 400 when there are no tasks — treat as empty, not an error
-      if (err.response?.status === 400) {
+      // Backend returns 404 when there are zero tasks — treat as empty, not an error
+      if (err.response?.status === 404) {
         setTasks([]);
       } else {
         setError(err.response?.data?.message || "Failed to load tasks.");
@@ -93,24 +116,48 @@ export default function StudentTasks() {
     }
   };
 
-  const handleComplete = async (id: string) => {
-    setCompletingId(id);
+  // Assign task form
+  const handleTaskChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setTaskForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+    if (taskError) setTaskError("");
+  };
+
+  const handleTaskSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!taskForm.title || !taskForm.description || !taskForm.assignedTo || !taskForm.dueDate) {
+      setTaskError("All fields are required.");
+      return;
+    }
+    setTaskLoading(true);
     try {
-      const res = await completeTaskAPI(id);
-      const updated = res.data.data;
-      setTasks((prev) => prev.map((t) => (t._id === id ? updated : t)));
+      const res = await createTaskAPI(taskForm);
+      const created = res.data.data;
+      // insertMany (announcement) returns an array, single create returns an object
+      const newTasks = Array.isArray(created) ? created : [created];
+      setTasks((p) => [...newTasks, ...p]);
+      setTaskSuccess(true);
+      setTaskForm({ title: "", description: "", assignedTo: "", dueDate: "" });
+      setTimeout(() => {
+        setTaskSuccess(false);
+        setShowTaskModal(false);
+      }, 1500);
     } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to mark task complete.");
+      setTaskError(err.response?.data?.message || "Failed to create task.");
     } finally {
-      setCompletingId(null);
+      setTaskLoading(false);
     }
   };
 
   const pendingTasks = tasks.filter((t) => !t.isComplete);
   const completedTasks = tasks.filter((t) => t.isComplete);
-  const visibleTasks = tab === "pending" ? pendingTasks : completedTasks;
+  const visibleTasks = tab === "all" ? tasks : tab === "pending" ? pendingTasks : completedTasks;
 
   const isOverdue = (dueDate: string) => new Date(dueDate).getTime() < Date.now();
+
+  const getName = (ref: PopulatedRef | string | null | undefined, fallback = "—") => {
+    if (!ref) return fallback;
+    return typeof ref === "object" ? ref.name : fallback;
+  };
 
   return (
     <div className="flex h-screen bg-bg-page font-sans overflow-hidden">
@@ -158,6 +205,12 @@ export default function StudentTasks() {
         </nav>
 
         <div className={`p-3 border-t border-white/5 flex-shrink-0 ${collapsed ? "flex flex-col items-center gap-2" : ""}`}>
+          {!collapsed && (
+            <div className="flex items-center gap-1.5 mb-2.5">
+              <span className="text-xs font-semibold text-teal bg-teal-light px-2 py-0.5 rounded-full">HOH</span>
+              <span className="text-xs text-sidebar-muted">Head of Hostel</span>
+            </div>
+          )}
           {!collapsed ? (
             <div>
               <p className="text-xs text-white font-medium truncate">{student?.name}</p>
@@ -168,7 +221,7 @@ export default function StudentTasks() {
             </div>
           ) : (
             <>
-              <span className="text-xs font-bold text-teal">{student?.name?.charAt(0)}</span>
+              <span className="text-xs font-bold text-teal">H</span>
               <button onClick={handleLogout} title="Sign out" className="text-sidebar-muted hover:text-red transition-colors">
                 <LogoutIcon />
               </button>
@@ -186,22 +239,34 @@ export default function StudentTasks() {
               <MenuIcon />
             </button>
             <div>
-              <h1 className="text-sm font-semibold text-text-primary tracking-tight">My tasks</h1>
+              <h1 className="text-sm font-semibold text-text-primary tracking-tight">Task management</h1>
               <p className="text-xs text-text-secondary hidden sm:block">
                 {new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
               </p>
             </div>
           </div>
-          <div className="w-8 h-8 rounded-full bg-teal-light flex items-center justify-center text-teal text-xs font-bold flex-shrink-0">
-            {student?.name?.charAt(0).toUpperCase()}
-          </div>
+          <button
+            onClick={() => { setShowTaskModal(true); setTaskError(""); setTaskSuccess(false); }}
+            className="py-2 px-3.5 text-xs font-semibold text-white bg-teal hover:bg-teal-hover rounded-lg transition-colors flex items-center gap-2"
+          >
+            <PlusIcon /> Assign task
+          </button>
         </header>
 
         <div className="flex-1 overflow-y-auto p-4 md:p-6">
           <div className="space-y-5">
 
             {/* ── Summary cards ── */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-bg-card rounded-xl border border-border p-5">
+                <div className="flex items-center gap-3 mb-1">
+                  <div className="w-9 h-9 rounded-lg bg-teal-light flex items-center justify-center text-teal flex-shrink-0">
+                    <TaskIcon />
+                  </div>
+                  <p className="text-sm font-semibold text-text-primary">Total</p>
+                </div>
+                <p className="text-2xl font-bold text-text-primary pl-0.5">{tasks.length}</p>
+              </div>
               <div className="bg-bg-card rounded-xl border border-border p-5">
                 <div className="flex items-center gap-3 mb-1">
                   <div className="w-9 h-9 rounded-lg bg-amber-bg flex items-center justify-center text-amber flex-shrink-0">
@@ -230,17 +295,17 @@ export default function StudentTasks() {
 
             {/* ── Tabs ── */}
             <div className="flex gap-2 border-b border-border">
-              {(["pending", "completed"] as FilterTab[]).map((t) => (
+              {(["all", "pending", "completed"] as FilterTab[]).map((t) => (
                 <button
                   key={t}
                   onClick={() => setTab(t)}
-                  className={`px-3 py-2 text-xs font-semibold border-b-2 transition-colors -mb-px ${
+                  className={`px-3 py-2 text-xs font-semibold border-b-2 transition-colors -mb-px capitalize ${
                     tab === t
                       ? "border-teal text-teal"
                       : "border-transparent text-text-muted hover:text-text-secondary"
                   }`}
                 >
-                  {t === "pending" ? `Pending (${pendingTasks.length})` : `Completed (${completedTasks.length})`}
+                  {t} ({t === "all" ? tasks.length : t === "pending" ? pendingTasks.length : completedTasks.length})
                 </button>
               ))}
             </div>
@@ -256,11 +321,9 @@ export default function StudentTasks() {
                   <div className="w-10 h-10 bg-teal-light rounded-full flex items-center justify-center mx-auto mb-2">
                     <TaskIcon />
                   </div>
-                  <p className="text-xs font-medium text-text-primary mb-1">
-                    {tab === "pending" ? "No pending tasks" : "No completed tasks yet"}
-                  </p>
+                  <p className="text-xs font-medium text-text-primary mb-1">No tasks here</p>
                   <p className="text-xs text-text-muted">
-                    {tab === "pending" ? "You're all caught up." : "Finish a task to see it here."}
+                    {tab === "all" ? "Assign your first task to get started." : "Nothing in this filter yet."}
                   </p>
                 </div>
               ) : (
@@ -281,24 +344,27 @@ export default function StudentTasks() {
                             )}
                           </div>
                           <p className="text-xs text-text-secondary leading-relaxed mb-1.5">{task.description}</p>
-                          <p className="text-xs text-text-muted">
-                            Due {new Date(task.dueDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                          </p>
+                          <div className="flex items-center gap-3 text-xs text-text-muted">
+                            <span>Assigned to <span className="text-text-secondary font-medium">{getName(task.assignTo)}</span></span>
+                            <span>·</span>
+                            <span>Due {new Date(task.dueDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</span>
+                          </div>
                         </div>
 
-                        <div className="flex-shrink-0">
+                        <div className="flex-shrink-0 text-right">
                           {task.isComplete ? (
-                            <span className="flex items-center gap-1.5 text-xs font-medium text-green">
-                              <CheckCircleIcon /> Done
-                            </span>
+                            <div>
+                              <span className="flex items-center gap-1.5 text-xs font-medium text-green justify-end">
+                                <CheckCircleIcon /> Done
+                              </span>
+                              {task.completedBy && (
+                                <p className="text-xs text-text-muted mt-1">by {getName(task.completedBy)}</p>
+                              )}
+                            </div>
                           ) : (
-                            <button
-                              onClick={() => handleComplete(task._id)}
-                              disabled={completingId === task._id}
-                              className="px-3 py-1.5 text-xs font-semibold text-white bg-teal hover:bg-teal-hover disabled:opacity-60 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center gap-1.5"
-                            >
-                              {completingId === task._id ? <><SpinnerIcon /> Saving...</> : "Mark done"}
-                            </button>
+                            <span className="text-xs font-medium text-amber bg-amber-bg px-2.5 py-1 rounded-full border border-amber-border">
+                              Pending
+                            </span>
                           )}
                         </div>
                       </div>
@@ -311,6 +377,78 @@ export default function StudentTasks() {
           </div>
         </div>
       </div>
+
+      {/* ── Assign Task Modal ── */}
+      {showTaskModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+          <div className="bg-bg-card rounded-2xl border border-border w-full max-w-md shadow-xl">
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <h2 className="text-sm font-semibold text-text-primary">Assign task</h2>
+              <button onClick={() => setShowTaskModal(false)} className="text-text-muted hover:text-text-primary transition-colors">
+                <CloseIcon />
+              </button>
+            </div>
+
+            {taskSuccess ? (
+              <div className="p-6 text-center">
+                <div className="w-12 h-12 bg-teal-light rounded-full flex items-center justify-center mx-auto mb-3">
+                  <CheckCircleIconLg />
+                </div>
+                <p className="text-sm font-semibold text-text-primary">Task created!</p>
+                <p className="text-xs text-text-muted mt-1">The student will see it on their dashboard.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleTaskSubmit} className="p-5 space-y-4">
+                {taskError && (
+                  <div className="flex items-center gap-2 bg-red-bg border border-red-border text-red rounded-lg px-3 py-2.5 text-xs">
+                    <AlertIcon /> {taskError}
+                  </div>
+                )}
+                <div>
+                  <label className="block text-xs font-medium text-text-primary mb-1.5">Task title</label>
+                  <input type="text" name="title" value={taskForm.title} onChange={handleTaskChange}
+                    placeholder="e.g. Clean common bathroom"
+                    className="w-full px-3 py-2.5 rounded-lg text-sm bg-bg-page border border-border text-text-primary placeholder:text-text-muted focus:outline-none focus:border-teal transition-colors" />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-text-primary mb-1.5">Description</label>
+                  <textarea name="description" value={taskForm.description} onChange={handleTaskChange}
+                    placeholder="Describe what needs to be done..."
+                    rows={3}
+                    className="w-full px-3 py-2.5 rounded-lg text-sm bg-bg-page border border-border text-text-primary placeholder:text-text-muted focus:outline-none focus:border-teal transition-colors resize-none" />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-text-primary mb-1.5">Assign to</label>
+                  <select name="assignedTo" value={taskForm.assignedTo} onChange={handleTaskChange}
+                    className="w-full px-3 py-2.5 rounded-lg text-sm bg-bg-page border border-border text-text-primary focus:outline-none focus:border-teal transition-colors">
+                    <option value="">Select student</option>
+                    {students.map((s) => (
+                      <option key={s._id} value={s._id}>{s.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-text-primary mb-1.5">Due date</label>
+                  <input type="date" name="dueDate" value={taskForm.dueDate} onChange={handleTaskChange}
+                    min={new Date().toISOString().split("T")[0]}
+                    className="w-full px-3 py-2.5 rounded-lg text-sm bg-bg-page border border-border text-text-primary focus:outline-none focus:border-teal transition-colors" />
+                </div>
+                <div className="flex gap-3 pt-1">
+                  <button type="button" onClick={() => setShowTaskModal(false)}
+                    className="flex-1 py-2.5 text-xs font-medium border border-border rounded-lg text-text-secondary hover:bg-bg-page transition-colors">
+                    Cancel
+                  </button>
+                  <button type="submit" disabled={taskLoading}
+                    className="flex-1 py-2.5 text-xs font-semibold text-white bg-teal hover:bg-teal-hover disabled:opacity-60 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center justify-center gap-2">
+                    {taskLoading ? <><SpinnerIcon /> Assigning...</> : "Assign task"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
@@ -324,10 +462,14 @@ function ReceiptIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" 
 function TaskIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9,11 12,14 22,4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" /></svg>; }
 function ChatIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /></svg>; }
 function BookIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" /></svg>; }
+function MegaphoneIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z" /></svg>; }
+function PlusIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>; }
 function MenuIcon() { return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>; }
 function ChevronLeftIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15,18 9,12 15,6" /></svg>; }
 function ChevronRightIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9,18 15,12 9,6" /></svg>; }
 function LogoutIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" /><polyline points="16,17 21,12 16,7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>; }
 function AlertIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>; }
 function CheckCircleIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20,6 9,17 4,12" /></svg>; }
+function CheckCircleIconLg() { return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-teal)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20,6 9,17 4,12" /></svg>; }
+function CloseIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>; }
 function SpinnerIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="animate-spin"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /></svg>; }
