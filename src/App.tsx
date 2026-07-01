@@ -38,7 +38,7 @@ const App = () => {
         <Route path='/student/dashboard' element={<StudentDashboard />} />
         <Route path="/student/complaints" element={<StudentComplaints />} />
         <Route path='/student/login' element={<StudentLogin />} />
-        <Route path='/student/task' element={<StudentTasks />} />
+        <Route path='/student/tasks' element={<StudentTasks />} />
 
           {/* all route that contains hoh */}
 
