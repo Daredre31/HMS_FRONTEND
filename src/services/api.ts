@@ -206,7 +206,7 @@ export const createTaskAPI = (data: {
   description: string;
   assignedTo: string;
   dueDate: string;
-}) => api.post("/asigntask", data);
+}) => api.post("/assigntask", data);
 
 export const getMyTasksAPI = () => api.get('/mytask');
 export const completeTaskAPI =(id:string) =>  api.patch(`/completetask/${id}`)

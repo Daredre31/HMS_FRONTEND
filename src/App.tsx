@@ -48,7 +48,7 @@ const App = () => {
 
           {/* mr catcher baami this guys ia a bastard i will soon remove it*/}
 
-           {/* <Route path='*' element={<Navigate to='/student/login' replace />} /> */}
+           <Route path='*' element={<Navigate to='/student/login' replace />} />
 
       </Routes>
     </div>
