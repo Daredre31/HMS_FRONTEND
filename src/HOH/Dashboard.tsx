@@ -22,7 +22,7 @@ interface Task {
   _id: string;
   title: string;
   description: string;
-  assignedTo: { name: string } | string;
+  assignTo: { name: string } | string;
   dueDate: string;
   createdAt: string;
 }
@@ -63,7 +63,7 @@ export default function HOHDashboard() {
   const [taskForm, setTaskForm] = useState({
     title: "",
     description: "",
-    assignedTo: "",
+    assignTo: "",
     dueDate: "",
   });
   const [taskLoading, setTaskLoading] = useState<boolean>(false);
@@ -128,7 +128,7 @@ export default function HOHDashboard() {
 
   const handleTaskSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!taskForm.title || !taskForm.description || !taskForm.assignedTo || !taskForm.dueDate) {
+    if (!taskForm.title || !taskForm.description || !taskForm.assignTo || !taskForm.dueDate) {
       setTaskError("All fields are required.");
       return;
     }
@@ -137,7 +137,7 @@ export default function HOHDashboard() {
       const res = await createTaskAPI(taskForm);
       setTasks((p) => [res.data.data, ...p]);
       setTaskSuccess(true);
-      setTaskForm({ title: "", description: "", assignedTo: "", dueDate: "" });
+      setTaskForm({ title: "", description: "", assignTo: "", dueDate: "" });
       setTimeout(() => {
         setTaskSuccess(false);
         setShowTaskModal(false);
@@ -167,7 +167,7 @@ export default function HOHDashboard() {
       await createTaskAPI({
         title: announcementForm.title,
         description: announcementForm.description,
-        assignedTo: "all",
+        assignTo: "all",
         dueDate: announcementForm.dueDate || new Date().toISOString().split("T")[0],
       });
       setAnnouncementSuccess(true);
@@ -426,7 +426,7 @@ export default function HOHDashboard() {
                         <div className="min-w-0 flex-1">
                           <p className="text-xs font-medium text-text-primary truncate">{task.title}</p>
                           <p className="text-xs text-text-muted truncate">
-                            {typeof task.assignedTo === "object" ? task.assignedTo.name : task.assignedTo === "all" ? "All students" : task.assignedTo}
+                            {typeof task.assignTo === "object" ? task.assignTo.name : task.assignTo === "all" ? "All students" : task.assignTo}
                           </p>
                         </div>
                         <div className="text-xs text-text-muted flex-shrink-0 ml-4">
@@ -484,7 +484,7 @@ export default function HOHDashboard() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-text-primary mb-1.5">Assign to</label>
-                  <select name="assignedTo" value={taskForm.assignedTo} onChange={handleTaskChange}
+                  <select name="assignTo" value={taskForm.assignTo} onChange={handleTaskChange}
                     className="w-full px-3 py-2.5 rounded-lg text-sm bg-bg-page border border-border text-text-primary focus:outline-none focus:border-teal transition-colors">
                     <option value="">Select student</option>
                     {students.map((s) => (
