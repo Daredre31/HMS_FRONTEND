@@ -15,6 +15,7 @@ import EditStudent from './Admin/EditStudent'
 import HOHDashboard from './HOH/Dashboard'
 import StudentTasks from './Student/StudentTask'
 import HOHTasks from './HOH/assignTask'
+import ComingSoon from './components/layout/comingSoon'
 
 const App = () => {
   return (
@@ -48,7 +49,17 @@ const App = () => {
 
           {/* mr catcher baami this guys ia a bastard i will soon remove it*/}
 
-           <Route path='*' element={<Navigate to='/student/login' replace />} />
+           {/* <Route path='*' element={<Navigate to='/student/login' replace />} /> */}
+
+           <Route path='/admin/payments' element={<ComingSoon />} />
+           <Route path='/admin/notifications' element={<ComingSoon />} />
+           <Route path='/admin/requests' element={<ComingSoon />} />
+           <Route path='/admin/reports' element={<ComingSoon />} />
+           <Route path='/hoh/announcement' element={<ComingSoon />} />
+           <Route path='/student/handbook' element={<ComingSoon />} />
+           <Route path='/hoh/announcement' element={<ComingSoon />} />
+           <Route path='/student/payment' element={<ComingSoon />} />
+           <Route path='/student/room' element={<ComingSoon />} />
 
       </Routes>
     </div>
