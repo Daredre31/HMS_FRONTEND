@@ -57,6 +57,10 @@ export default function StudentDashboard() {
     setMobileOpen(false);
   }, [location.pathname]);
 
+  useEffect(() => {
+  if (mobileOpen) setCollapsed(false);
+}, [mobileOpen]);
+
   const handleLogout = async () => {
   try {
     await logout();

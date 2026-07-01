@@ -92,6 +92,10 @@ export default function HOHDashboard() {
 
   useEffect(() => { setMobileOpen(false); }, [location.pathname]);
 
+ useEffect(() => {
+  if (mobileOpen) setCollapsed(false);
+}, [mobileOpen]); 
+
   // Load students for task assignment dropdown
   useEffect(() => {
     getAllStudentsAPI()
