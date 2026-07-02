@@ -88,7 +88,7 @@ export default function AdminSignup() {
 
       // Show brief success state before redirecting to login
       setSuccess(true);
-      setTimeout(() => navigate("/login"), 1800);
+      setTimeout(() => navigate("/admin/login"), 1800);
     } catch {
       setError("Could not reach the server. Check your connection.");
     } finally {

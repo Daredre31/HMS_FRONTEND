@@ -109,6 +109,7 @@ export default function HOHDashboard() {
       .then((res) => setTasks(res.data.data || []))
       .catch(() => {})
       .finally(() => setTasksLoading(false));
+
   }, []);
 
   
@@ -430,7 +431,7 @@ export default function HOHDashboard() {
                         <div className="min-w-0 flex-1">
                           <p className="text-xs font-medium text-text-primary truncate">{task.title}</p>
                           <p className="text-xs text-text-muted truncate">
-                            {typeof task.assignTo === "object" ? task.assignTo.name : task.assignTo === "all" ? "All students" : task.assignTo}
+                            {task.assignTo && typeof task.assignTo === "object"? task.assignTo.name: task.assignTo === "all"? "All students": task.assignTo || "Unknown Student"}
                           </p>
                         </div>
                         <div className="text-xs text-text-muted flex-shrink-0 ml-4">

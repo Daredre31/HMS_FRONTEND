@@ -22,7 +22,7 @@ interface StudentData {
   };
 }
 
-// ── Student sidebar nav
+//  Student sidebar nav
 
 const NAV_ITEMS = [
   { label: "Dashboard", path: "/student/dashboard", icon: <GridIcon /> },
@@ -33,7 +33,7 @@ const NAV_ITEMS = [
   { label: "Handbook", path: "/student/handbook", icon: <BookIcon /> },
 ];
 
-// ── Student dashboard 
+//  Student dashboard 
 
 export default function StudentDashboard() {
   const navigate = useNavigate();

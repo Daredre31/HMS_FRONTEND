@@ -75,7 +75,7 @@ export default function StudentComplaints() {
         const res = await getMyComplaintsAPI();
         setComplaints(res.data.data || []);
       } catch {
-        setError("Could not load your complaints.");
+        setError("you have no complain yet , write your first complain");
       } finally {
         setLoading(false);
       }
