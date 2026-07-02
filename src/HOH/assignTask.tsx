@@ -260,7 +260,7 @@ export default function HOHTasks() {
             <div className="grid grid-cols-3 gap-4">
               <div className="bg-bg-card rounded-xl border border-border p-5">
                 <div className="flex items-center gap-3 mb-1">
-                  <div className="w-9 h-9 rounded-lg bg-teal-light flex items-center justify-center text-teal flex-shrink-0">
+                  <div className="w-9 h-9 px-4 py-4 rounded-lg bg-teal-light flex items-center justify-center text-teal flex-shrink-0">
                     <TaskIcon />
                   </div>
                   <p className="text-sm font-semibold text-text-primary">Total</p>
