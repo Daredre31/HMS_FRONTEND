@@ -257,7 +257,7 @@ export default function HOHTasks() {
           <div className="space-y-5">
 
             {/* ── Summary cards ── */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="flex flex-col sm:flex-wrap ">
               <div className="bg-bg-card rounded-xl border border-border p-5">
                 <div className="flex items-center gap-3 mb-1">
                   <div className="w-9 h-9   rounded-lg bg-teal-light flex items-center justify-center text-teal flex-shrink-0">

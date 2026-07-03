@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { createStudentAPI, getAllBedsAPI } from "../services/api";
+import { createStudentAPI, getAllBedsAPI, logout } from "../services/api";
 
 //  Types
 
@@ -131,10 +131,16 @@ export default function CreateStudent() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("hms_token");
-    localStorage.removeItem("hms_user");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      localStorage.removeItem("hms_token");
+      localStorage.removeItem("hms_student_token");
+      localStorage.removeItem("hms_user");
+      localStorage.removeItem("hms_student");
+      window.location.href = "/admin/login";
+    }
   };
 
   return (

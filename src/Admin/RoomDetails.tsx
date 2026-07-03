@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
-import { getAllBedsAPI, createBedAPI, getRoomByIdAPI } from "../services/api";
+import { getAllBedsAPI, createBedAPI, getRoomByIdAPI, logout } from "../services/api";
 import api from "../services/api";
 
 // ── Types ─────────────────────────────────────────────────────
@@ -130,10 +130,16 @@ export default function RoomDetail() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("hms_token");
-    localStorage.removeItem("hms_user");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      localStorage.removeItem("hms_token");
+      localStorage.removeItem("hms_student_token");
+      localStorage.removeItem("hms_user");
+      localStorage.removeItem("hms_student");
+      window.location.href = "/admin/login";
+    }
   };
 
   const occupiedCount = beds.filter((b) => b.isOccupied).length;

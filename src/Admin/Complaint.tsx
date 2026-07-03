@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { getComplaintsAPI, respondToComplaintAPI } from "../services/api";
+import { getComplaintsAPI, logout, respondToComplaintAPI } from "../services/api";
 
 interface Complaint {
   _id: string;
@@ -79,10 +79,16 @@ export default function AdminComplaints() {
     } finally { setSubmitting(false); }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("hms_token");
-    localStorage.removeItem("hms_user");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      localStorage.removeItem("hms_token");
+      localStorage.removeItem("hms_student_token");
+      localStorage.removeItem("hms_user");
+      localStorage.removeItem("hms_student");
+      window.location.href = "/admin/login";
+    }
   };
 
   return (

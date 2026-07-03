@@ -115,12 +115,17 @@ export default function Students() {
     }
   };
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+  try {
+    await logout();
+  } finally {
     localStorage.removeItem("hms_token");
+    localStorage.removeItem("hms_student_token");
     localStorage.removeItem("hms_user");
-    navigate("/login");
-  };
+    localStorage.removeItem("hms_student");
+    window.location.href = "/admin/login";
+  }
+};
 
   return (
     <div className="flex h-screen bg-bg-page font-sans overflow-hidden">

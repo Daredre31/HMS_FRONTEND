@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
-import { getStudentByIdAPI, updateStudentAPI } from "../services/api";
+import { getStudentByIdAPI, logout, updateStudentAPI } from "../services/api";
 
 // ── Types 
 interface FormState {
@@ -119,10 +119,16 @@ export default function EditStudent() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("hms_token");
-    localStorage.removeItem("hms_user");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      localStorage.removeItem("hms_token");
+      localStorage.removeItem("hms_student_token");
+      localStorage.removeItem("hms_user");
+      localStorage.removeItem("hms_student");
+      window.location.href = "/admin/login";
+    }
   };
 
   return (
