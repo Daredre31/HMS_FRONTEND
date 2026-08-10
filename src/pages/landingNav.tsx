@@ -40,7 +40,7 @@ export default function Navbar() {
               scrolled ? "text-[var(--color-text-primary)]" : "text-white"
             }`}
           >
-            HostelOS
+           Resentra
           </span>
         </a>
 

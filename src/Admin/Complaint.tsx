@@ -97,7 +97,7 @@ export default function AdminComplaints() {
 
       <aside className={`fixed md:relative z-30 flex flex-col bg-dark min-h-screen transition-all duration-300 ease-in-out flex-shrink-0 ${collapsed ? "w-16" : "w-56"} ${mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
         <div className={`flex items-center h-16 px-4 border-b border-white/5 flex-shrink-0 ${collapsed ? "justify-center" : "justify-between"}`}>
-          {!collapsed && (<div className="flex items-center gap-2.5"><div className="w-7 h-7 bg-teal rounded-lg flex items-center justify-center"><HouseIconSm /></div><span className="text-teal-light text-sm font-semibold tracking-tight">HostelOS</span></div>)}
+          {!collapsed && (<div className="flex items-center gap-2.5"><div className="w-7 h-7 bg-teal rounded-lg flex items-center justify-center"><HouseIconSm /></div><span className="text-teal-light text-sm font-semibold tracking-tight">Resentra</span></div>)}
           <button onClick={() => setCollapsed((p) => !p)} className="hidden md:flex text-sidebar-muted hover:text-teal transition-colors p-1 rounded">{collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}</button>
         </div>
         <nav className="flex-1 py-4 flex flex-col gap-0.5 px-2 overflow-y-auto">

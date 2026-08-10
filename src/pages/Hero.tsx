@@ -34,7 +34,7 @@ export default function Hero() {
         <p className="mx-auto mt-6 max-w-2xl text-[16.5px] leading-relaxed text-white/80 sm:text-[17px]">
           Beds get double-allocated, a boarder goes unaccounted for at 10pm
           check, and hostel fees only add up during a reconciliation weekend.
-          HostelOS gives admins, heads of hostel, and students each their own
+          Resentra gives admins, heads of hostel, and students each their own
           login — so every bed, complaint, and payment lives in one place
           your staff actually trusts.
         </p>

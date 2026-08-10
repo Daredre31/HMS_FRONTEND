@@ -151,7 +151,7 @@ export default function Students() {
               <div className="w-7 h-7 bg-teal rounded-lg flex items-center justify-center flex-shrink-0">
                 <HouseIconSm />
               </div>
-              <span className="text-teal-light text-sm font-semibold tracking-tight">HostelOS</span>
+              <span className="text-teal-light text-sm font-semibold tracking-tight">Resentra</span>
             </div>
           )}
           <button
