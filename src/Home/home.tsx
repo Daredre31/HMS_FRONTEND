@@ -1,4 +1,4 @@
-import React from 'react'
+
 import Navbar from '../pages/landingNav'
 import Hero from '../pages/Hero'
 import FeaturesSection from '../pages/featurepage'
