@@ -32,7 +32,7 @@ export default function Navbar() {
         {/* Logo */}
         <a href="#" className="flex items-center gap-2.5 shrink-0">
           <span className="relative flex h-9 w-9 items-center justify-center rounded-[10px] bg-[var(--color-teal)] font-serif text-base font-semibold text-white">
-            H
+            R
             <span className="absolute -bottom-1 -right-1 h-2.5 w-2.5 rounded-full bg-[var(--color-teal-mid)] ring-2 ring-white" />
           </span>
           <span
