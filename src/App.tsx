@@ -16,15 +16,17 @@ import HOHDashboard from './HOH/Dashboard'
 import StudentTasks from './Student/StudentTask'
 import HOHTasks from './HOH/assignTask'
 import ComingSoon from './components/layout/comingSoon'
+import HomeLanding from './Home/home'
+
+
+
 
 const App = () => {
   return (
     <div>
       <Routes>
 
-      {/* redirect route which is very important */}
-
-      <Route path='/' element={<Navigate to='/student/login' replace />} />
+         <Route path='/' element={<HomeLanding />} />
         {/* all route that concern admin */}
         <Route path='/admin/signup' element={<AdminSignup />} />
         <Route path='/admin/login' element={<AdminLogin />} />
