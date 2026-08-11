@@ -29,24 +29,19 @@ export default function Navbar() {
             : "bg-white/35 backdrop-blur-sm border-white/25 px-6 py-3.5"
         }`}
       >
-        {/* Logo */}
-        <Link to="/" className="flex shrink-0 items-center gap-2">
-          <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-[10px] bg-[var(--color-teal)]">
-            <img
-              src="/resentra-logo2.png"
-              alt="resentra-logo"
-              className="h-full w-full object-contain p-1.5"
-            />
-            <span className="absolute -bottom-1 -right-1 h-2.5 w-2.5 rounded-full bg-[var(--color-teal-mid)] ring-2 ring-white" />
+
+        <div className="flex items-center gap-2">
+          <span className="relative flex h-9 w-9 items-center justify-center rounded-[10px] bg-[var(--color-teal)] font-serif text-base font-semibold text-white">
+            <img src="/resentra-logo2.png" alt="resentra-logo" />
           </span>
           <span
             className={`font-serif text-[17px] font-semibold tracking-tight ${
               scrolled ? "text-[var(--color-text-primary)]" : "text-white"
             }`}
           >
-            Resentra
-          </span>
-        </Link>
+           Resentra
+          </span> </div>
+        
 
         {/* Desktop links */}
         <ul className="hidden md:flex items-center gap-8">
@@ -64,26 +59,28 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Desktop CTA — Link styled directly, no nested button/a inside it */}
-        <div className="hidden shrink-0 items-center gap-3 md:flex">
-          <Link
-            to="/admin/login"
+        {/* Desktop CTA */}
+        <div className="hidden md:flex items-center gap-3 shrink-0">
+
+          <Link to='/admin/login'>
+              <button
             className={`text-[14.5px] font-medium transition-colors ${
-              scrolled
-                ? "text-[var(--color-text-primary)] hover:text-[var(--color-teal)]"
-                : "text-white/90 hover:text-white"
+              scrolled ? "text-[var(--color-text-primary)] hover:text-[var(--color-teal)]" : "text-white/90 hover:text-white"
             }`}
           >
             Sign in
+          </button>
           </Link>
+        
 
-          <Link
-            to="/student/login"
+        <Link to='/student/login'> 
+        <button
             className="group inline-flex items-center gap-1.5 rounded-xl bg-[var(--color-teal)] px-4 py-2.5 text-[14px] font-semibold text-white shadow-sm transition-colors hover:bg-[var(--color-teal-hover)]"
           >
             Access your portal
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-          </Link>
+          </button></Link>
+         
         </div>
 
         {/* Mobile toggle */}
@@ -116,22 +113,23 @@ export default function Navbar() {
             ))}
           </ul>
           <div className="mt-5 flex flex-col gap-2.5 border-t border-[var(--color-border-soft)] pt-4">
-            {/* Link styled directly — no nested <a> inside it */}
-            <Link
-              to="/admin/login"
+
+            <Link to='/admin/login'>
+            <a
               onClick={() => setMenuOpen(false)}
               className="py-2 text-center text-[14.5px] font-medium text-[var(--color-text-primary)]"
             >
               Sign in
-            </Link>
+            </a> </Link>
 
-            <Link
-              to="/student/login"
+            <Link to='/student/login'>
+            <a
+           
               onClick={() => setMenuOpen(false)}
               className="rounded-xl bg-[var(--color-teal)] px-4 py-2.5 text-center text-[14px] font-semibold text-white"
             >
               Access your portal
-            </Link>
+            </a> </Link>
           </div>
         </div>
       )}
