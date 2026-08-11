@@ -53,7 +53,7 @@ export default function ContactSection() {
         <div className="flex flex-col items-center gap-6 py-8 sm:flex-row sm:justify-between">
           <a href="#" className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-[var(--color-teal)] font-serif text-[15px] font-semibold text-white">
-              R
+              <img src="/resentra-logo2.png" alt="resentra-logo" />
             </span>
             <span className="font-serif text-[15.5px] font-semibold text-white">
               Resentra

@@ -114,20 +114,22 @@ export default function Navbar() {
             ))}
           </ul>
           <div className="mt-5 flex flex-col gap-2.5 border-t border-[var(--color-border-soft)] pt-4">
+
+            <Link to='/admin/login'>
             <a
-              href="#login"
               onClick={() => setMenuOpen(false)}
               className="py-2 text-center text-[14.5px] font-medium text-[var(--color-text-primary)]"
             >
               Sign in
-            </a>
+            </a> </Link>
+
+            <Link to='/student/login'>
             <a
-              href="#portal"
               onClick={() => setMenuOpen(false)}
               className="rounded-xl bg-[var(--color-teal)] px-4 py-2.5 text-center text-[14px] font-semibold text-white"
             >
               Access your portal
-            </a>
+            </a> </Link>
           </div>
         </div>
       )}
