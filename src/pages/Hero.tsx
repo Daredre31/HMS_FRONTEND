@@ -1,4 +1,5 @@
 import { ArrowRight, ShieldCheck } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   return (
@@ -40,13 +41,14 @@ export default function Hero() {
 
         {/* CTAs */}
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a
-            href="#portal"
+
+          <Link to={'/student/login'}>
+          <button
             className="group inline-flex items-center gap-2 rounded-xl bg-[var(--color-bg-page)] px-6 py-3.5 text-[15px] font-semibold text-[var(--color-teal-hover)] shadow-lg shadow-black/10 transition-transform hover:-translate-y-0.5"
           >
             Access your portal
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </a>
+          </button> </Link>
           <a
             href="#features"
             className="inline-flex items-center gap-2 rounded-xl border border-white/30 px-6 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-white/10"
@@ -55,7 +57,7 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* Trust strip */}
+        {/* Trust strip and some feature explanation */}
         <div className="mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[13px] font-medium text-white/60">
           <span>Role-based portals</span>
           <span className="h-1 w-1 rounded-full bg-white/30" />
