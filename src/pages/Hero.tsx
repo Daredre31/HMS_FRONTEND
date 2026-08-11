@@ -21,22 +21,21 @@ export default function Hero() {
         <div className="mx-auto mb-8 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 backdrop-blur-sm">
           <ShieldCheck className="h-3.5 w-3.5 text-[var(--color-teal-mid)]" />
           <span className="text-[13px] font-medium text-white/90">
-            One hostel. One private system. Not a shared spreadsheet.
+            Built for Appclick ICT Academy's boarding house
           </span>
         </div>
 
         {/* Headline */}
         <h1 className="font-serif text-[2.5rem] font-semibold leading-[1.1] tracking-tight text-white sm:text-[3.3rem] lg:text-[3.7rem]">
-          Your hostel still runs on paper ledgers and WhatsApp roll-calls
+          No more ledger books and WhatsApp roll-calls
         </h1>
 
         {/* Subtext */}
         <p className="mx-auto mt-6 max-w-2xl text-[16.5px] leading-relaxed text-white/80 sm:text-[17px]">
-          Beds get double-allocated, a boarder goes unaccounted for at 10pm
-          check, and hostel fees only add up during a reconciliation weekend.
-          Resentra gives admins, heads of hostel, and students each their own
-          login — so every bed, complaint, and payment lives in one place
-          your staff actually trusts.
+          HostelOS is Appclick ICT Academy's own hostel system — one place
+          where admin, house heads and boarders each have their login.
+          Every bed, complaint and fee is recorded the moment it happens,
+          not reconstructed at the end of the week.
         </p>
 
         {/* CTAs */}

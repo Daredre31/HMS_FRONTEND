@@ -7,21 +7,21 @@ interface Step {
 const STEPS: Step[] = [
   {
     number: "01",
-    title: "We set up your hostel",
+    title: "Boarders get allocated",
     description:
-      "A private instance with your blocks, rooms and houses loaded in, ready before your boarders arrive.",
+      "Admin assigns each new boarder a block, room and bed at the start of term, so nothing gets double-booked.",
   },
   {
     number: "02",
-    title: "Import your boarders",
+    title: "Every night gets checked",
     description:
-      "One spreadsheet in, and bed allocation, fees and roll-call are ready the same day.",
+      "House heads mark each boarder present, sick-bay or on exeat, and missing boarders surface right away.",
   },
   {
     number: "03",
-    title: "Run the session",
+    title: "Fees and records stay current",
     description:
-      "HOH checks in every night, admin reconciles fees, and every entry stays logged for the term.",
+      "Admin logs payments as they come in, so parents and staff can see a boarder's status without asking around.",
   },
 ];
 
@@ -36,12 +36,13 @@ export default function HowItWorksSection() {
           </span>
 
           <h2 className="mt-4 font-serif text-[2.1rem] font-semibold leading-[1.15] tracking-tight text-[var(--color-text-primary)] sm:text-[2.6rem]">
-            Live before the next resumption
+            How the hostel runs, term after term
           </h2>
 
           <p className="mt-5 max-w-sm text-[16px] leading-relaxed text-[var(--color-text-secondary)]">
-            One hostel, one instance. Your boarder data never sits beside
-            another hostel's — your rules, your backups, your record.
+            The same three steps repeat every session at Appclick ICT
+            Academy — allocation, nightly checks, and fees — all recorded
+            in one place instead of scattered notebooks.
           </p>
         </div>
 

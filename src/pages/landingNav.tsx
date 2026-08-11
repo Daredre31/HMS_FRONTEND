@@ -29,10 +29,10 @@ export default function Navbar() {
             : "bg-white/35 backdrop-blur-sm border-white/25 px-6 py-3.5"
         }`}
       >
-        {/* Logo */}
-        <a href="#" className="flex items-center gap-2.5 shrink-0">
+
+        <div className="flex items-center gap-2">
           <span className="relative flex h-9 w-9 items-center justify-center rounded-[10px] bg-[var(--color-teal)] font-serif text-base font-semibold text-white">
-            R
+            <img src="/resentra-logo2.png" alt="resentra-logo" />
             <span className="absolute -bottom-1 -right-1 h-2.5 w-2.5 rounded-full bg-[var(--color-teal-mid)] ring-2 ring-white" />
           </span>
           <span
@@ -41,8 +41,8 @@ export default function Navbar() {
             }`}
           >
            Resentra
-          </span>
-        </a>
+          </span> </div>
+        
 
         {/* Desktop links */}
         <ul className="hidden md:flex items-center gap-8">

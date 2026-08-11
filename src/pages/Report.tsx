@@ -92,7 +92,7 @@ export default function ReportsSection() {
         {/* Right: dashboard mock */}
         <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6 shadow-[0_20px_60px_-25px_rgba(44,44,42,0.25)]">
           {/* Window chrome */}
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-red-border)]" />
               <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-amber-border)]" />
@@ -101,7 +101,7 @@ export default function ReportsSection() {
             <span className="text-[12px] font-medium text-[var(--color-text-muted)]">
               Term 2 · Block A
             </span>
-          </div>
+          </div> */}
 
           {/* Stat tiles */}
           <div className="mt-5 grid grid-cols-2 gap-3">

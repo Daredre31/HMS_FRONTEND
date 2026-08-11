@@ -5,8 +5,7 @@ import {
   MessageSquareWarning,
   CheckSquare,
   ShieldCheck,
-  type LucideIcon,
-} from "lucide-react";
+  type LucideIcon,} from "lucide-react";
 
 interface Feature {
   icon: LucideIcon;
@@ -64,14 +63,14 @@ export default function FeaturesSection() {
 
         {/* Headline */}
         <h2 className="mt-4 font-serif text-[2.1rem] font-semibold leading-[1.15] tracking-tight text-[var(--color-text-primary)] sm:text-[2.6rem]">
-          Six problems, solved for your hostel only
+          Six things Appclick ICT Academy's hostel runs on
         </h2>
 
         {/* Subtext */}
         <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-[var(--color-text-secondary)]">
-          No modules you'll never open, and no other hostel's data in the
-          same system. Just the six things your boarding house actually
-          runs on, configured to your blocks, terms and staff.
+          Built around how the boarding house actually works — its blocks,
+          its terms, its staff — so admin, house heads and boarders each
+          open a system made for them, not a generic template.
         </p>
 
         {/* Grid */}
