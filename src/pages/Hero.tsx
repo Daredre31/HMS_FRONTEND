@@ -19,12 +19,12 @@ export default function Hero() {
 
       <div className="relative mx-auto max-w-4xl px-6 text-center">
         {/* Eyebrow badge */}
-        <div className="mx-auto mb-8 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 backdrop-blur-sm">
+        {/* <div className="mx-auto mb-8 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 backdrop-blur-sm">
           <ShieldCheck className="h-3.5 w-3.5 text-[var(--color-teal-mid)]" />
           <span className="text-[13px] font-medium text-white/90">
             Built for Appclick ICT Academy's boarding house
           </span>
-        </div>
+        </div> */}
 
         {/* Headline */}
         <h1 className="font-serif text-[2.5rem] font-semibold leading-[1.1] tracking-tight text-white sm:text-[3.3rem] lg:text-[3.7rem]">
